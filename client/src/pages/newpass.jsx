@@ -3,7 +3,6 @@ import tokonglomerat from "../support/assets/new_login.png";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingSpin from "react-loading-spin";
-// import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import REST_API from "../support/services/RESTApiService";
 function UpdatePassword() {

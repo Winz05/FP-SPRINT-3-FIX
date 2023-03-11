@@ -42,6 +42,8 @@ module.exports = (sequelize, DataTypes) => {
 			sequelize,
 			modelName: "discount_history",
 			freezeTableName: true,
+			timestamps: true,
+			updatedAt: false,
 		}
 	);
 	return discount_history;

@@ -18,6 +18,7 @@ module.exports = {
 		const { uid } = req.uid;
 		try {
 			const {
+				id,
 				name,
 				email,
 				gender,
@@ -30,6 +31,8 @@ module.exports = {
 				include: { model: db.user_address },
 			});
 			const httpStatus = new HTTPStatus(res, {
+				uid,
+				id,
 				name,
 				email,
 				gender,
@@ -163,7 +166,8 @@ module.exports = {
 				},
 			});
 
-			if (!findEmail.dataValues)
+
+			if (!findEmail)
 				return res.status(404).send({
 					isError: true,
 					message: "Email Not Found",
@@ -189,7 +193,7 @@ module.exports = {
 			res.status(201).send({
 				isError: false,
 				message: "Login Success",
-				data: { token, name: findEmail.dataValues.name },
+				data: {token, uid: findEmail.dataValues.uid, name: findEmail.dataValues.name,email: findEmail.dataValues.email, phone_number: findEmail.dataValues.phone_number},
 			});
 		} catch (error) {
 			res.status(404).send({
@@ -204,7 +208,7 @@ module.exports = {
 			res.status(201).send({
 				isError: false,
 				message: "Token Valid",
-				data: req.uid.name,
+				data: req.uid
 			});
 		} catch (error) {
 			res.status(500).send({
@@ -218,7 +222,7 @@ module.exports = {
 		try {
 			let { uid } = req.body;
 			await db.user.update(
-				{ status: "Active" },
+				{ status: "Verified" },
 				{
 					where: {
 						uid: uid,
@@ -228,7 +232,7 @@ module.exports = {
 
 			res.status(201).send({
 				isError: false,
-				message: "Account Actived!",
+				message: "Account Verified!",
 				data: null,
 			});
 		} catch (error) {

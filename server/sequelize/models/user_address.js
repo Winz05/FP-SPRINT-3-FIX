@@ -19,7 +19,23 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				validate: {
 					notNull: { msg: "User must have an address" },
-					notEmpty: { msg: "Users address can not be empty" },
+					notEmpty: { msg: "Users address must not be empty" },
+				},
+			},
+			province: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				validate: {
+					notNull: { msg: "User must have an province" },
+					notEmpty: { msg: "Users province must not be empty" },
+				},
+			},
+			city: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				validate: {
+					notNull: { msg: "User must have an city" },
+					notEmpty: { msg: "Users city must not be empty" },
 				},
 			},
 			receiver_name: {
@@ -27,15 +43,15 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				validate: {
 					notNull: { msg: "Receiver must have a receiver name" },
-					notEmpty: { msg: "Receiver name can not be empty" },
+					notEmpty: { msg: "Receiver name must not be empty" },
 				},
 			},
 			receiver_phone: {
-				type: DataTypes.INTEGER,
+				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
 					notNull: { msg: "Receiver must have a phone number" },
-					notEmpty: { msg: "Receiver phone_number can not be empty" },
+					notEmpty: { msg: "Receiver phone must not be empty" },
 				},
 			},
 			lat: DataTypes.STRING,

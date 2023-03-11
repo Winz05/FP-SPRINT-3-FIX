@@ -2,7 +2,7 @@ import axios from "axios";
 
 const REST_API = axios.create({
 	baseURL: "http://localhost:8000/",
-	headers: { token: localStorage.getItem("token") },
+	headers: { token: localStorage.getItem("token")},
 });
 
 export default REST_API;

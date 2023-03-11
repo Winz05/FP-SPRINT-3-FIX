@@ -1,50 +1,16 @@
 import { useRef, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import tokonglomerat from "../support/assets/new_login.png";
-import { toast, Toaster } from "react-hot-toast";
+import {  Toaster } from "react-hot-toast";
 import LoadingSpin from "react-loading-spin";
-import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-import REST_API from "../support/services/RESTApiService";
 
-function Login() {
+function Login(props) {
 	const [showPassword, setshowPassword] = useState(false);
 	const [errEmail, seterrEmail] = useState();
 	const [errPass, seterrPass] = useState();
-	const [disable, setdisable] = useState();
-	const [name, setname] = useState();
-
+	
 	const email = useRef();
 	const password = useRef();
-
-	const Navigate = useNavigate();
-
-	let onLogin = async () => {
-		try {
-			setdisable(true);
-			const { data } = await REST_API({
-				url: "user/login",
-				method: "POST",
-				data: {
-					email: email.current.value,
-					password: password.current.value,
-				},
-			});
-
-			localStorage.setItem("token", `${data.data.token}`);
-			setname(data.data.name);
-			toast.success(data);
-			email.current.value = "";
-			password.current.value = "";
-			setTimeout(() => {
-				Navigate("/home");
-			}, 3000);
-		} catch (error) {
-			toast.error(error.response.data.message);
-		} finally {
-			setdisable(false);
-		}
-	};
 
 	let onValidateEmail = (value) => {
 		if (value === "") {
@@ -66,7 +32,6 @@ function Login() {
 			seterrPass("");
 		}
 	};
-
 	return (
 		<div className=" max-h-screen overflow-hidden ">
 			<div className=" flex justify-center content-center mt-[32px] font-bold text-4xl font-mandalaFont text-red-700 ">
@@ -137,12 +102,12 @@ function Login() {
 							Forgot Password?
 						</a>
 						<button
-							onClick={() => onLogin()}
-							disabled={disable}
+							onClick={() => props.MyFunc.onLogin(email.current.value, password.current.value)}
+							disabled={props.isDisable.disable}
 							type="submit"
 							className="inline-flex w-full items-center justify-center mt-8 px-8 py-4 font-sans font-semibold tracking-wide hover:bg-gray-300 text-white bg-red-700 rounded-lg h-[60px]"
 						>
-							{disable ? (
+							{props.isDisable.disable ? (
 								<LoadingSpin size={"30px"} primaryColor={"red"} secondaryColor={"gray"} />
 							) : (
 								"Login"

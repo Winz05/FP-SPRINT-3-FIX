@@ -1,4 +1,3 @@
-// import axios from "axios";
 import { useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,7 +15,7 @@ function Activation() {
 
 	let onSubmit = async () => {
 		try {
-			let { data } = await REST_API({
+			 await REST_API({
 				url: "user/activation/uid",
 				method: "PATCH",
 				data: {

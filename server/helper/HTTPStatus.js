@@ -18,6 +18,15 @@ class HTTPStatus {
 		};
 		return this;
 	}
+	error(message, code = 500) {
+		this.result = {
+			isError: true,
+			message,
+			data: this.data,
+			code,
+		};
+		return this;
+	}
 	send() {
 		const { result, res } = this;
 		res.status(result.code).send(result);
