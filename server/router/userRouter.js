@@ -5,6 +5,9 @@ const { tokenVerify } = require("../middleware/verifyToken");
 const upload = require("../middleware/upload");
 
 Router.get("/profile", tokenVerify, userController.getUser);
+Router.post("/add-address", tokenVerify, userController.addAddress);
+Router.get("/rakir-province", userController.rakirProvince);
+Router.get("/rakir-city", userController.rakirCity);
 Router.delete("/delete-address/:id", tokenVerify, userController.deleteAddress);
 Router.patch("/main-address/:id", tokenVerify, userController.defaultAddress);
 Router.patch(

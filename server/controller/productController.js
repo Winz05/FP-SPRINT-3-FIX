@@ -116,39 +116,6 @@ module.exports = {
 			});
 		}
 	},
-	branch_product: async (req, res) => {
-		const { branch, category, page } = req.query;
-		try {
-			const data = await db.branch_product.findAll({
-				where: {
-					branch_id: branch,
-				},
-				include: [
-					{
-						model: db.product,
-						where: { category_id: category },
-					},
-					{
-						model: db.branch,
-					},
-				],
-				offset: page == 1 ? 0 : page * 10 - 10,
-				limit: 10,
-			});
-
-			res.status(201).send({
-				isError: false,
-				message: "Get Branch Product",
-				data,
-			});
-		} catch (error) {
-			res.status(404).send({
-				isError: true,
-				message: error.message,
-				data: error,
-			});
-		}
-	},
 	totalPageCategory: async (req, res) => {
 		const { branch, category } = req.query;
 		try {
@@ -190,6 +157,87 @@ module.exports = {
 				message: "Get All Product by Category",
 				data,
 			});
+		} catch (error) {
+			res.status(404).send({
+				isError: true,
+				message: error.message,
+				data: error,
+			});
+		}
+	},
+	sortby: async (req, res) => {
+		const { branch, category, page, sortby } = req.query;
+		const sort = sortby ? sortby.split("-") : "";
+		try {
+			if (sort[0] === "name") {
+				const data = await db.product.findAll({
+					where: {
+						category_id: category,
+					},
+					include: [
+						{
+							model: db.branch_product,
+							where: { branch_id: branch },
+							include: {
+								model: db.branch,
+							},
+						},
+					],
+					order: [["name", sort[1]]],
+					offset: page == 1 ? 0 : page * 10 - 10,
+					limit: 10,
+				});
+				res.status(201).send({
+					isError: false,
+					message: "Get Product by Sort Success",
+					data,
+				});
+			} else if (sort[0] === "price") {
+				const data = await db.product.findAll({
+					where: {
+						category_id: category,
+					},
+					include: [
+						{
+							model: db.branch_product,
+							where: { branch_id: branch },
+							include: {
+								model: db.branch,
+							},
+						},
+					],
+					order: [["price", sort[1]]],
+					offset: page == 1 ? 0 : page * 10 - 10,
+					limit: 10,
+				});
+				res.status(201).send({
+					isError: false,
+					message: "Get Product by Sort Success",
+					data,
+				});
+			} else if (sort === "") {
+				const data = await db.product.findAll({
+					where: {
+						category_id: category,
+					},
+					include: [
+						{
+							model: db.branch_product,
+							where: { branch_id: branch },
+							include: {
+								model: db.branch,
+							},
+						},
+					],
+					offset: page == 1 ? 0 : page * 10 - 10,
+					limit: 10,
+				});
+				res.status(201).send({
+					isError: false,
+					message: "Get Product by Sort Success",
+					data,
+				});
+			}
 		} catch (error) {
 			res.status(404).send({
 				isError: true,

@@ -1,12 +1,45 @@
 import { Dropdown } from "flowbite-react";
 import { DropdownItem } from "flowbite-react/lib/esm/components/Dropdown/DropdownItem";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import REST_API from "../support/services/RESTApiService";
 
 export default function Checkout() {
+	const [data, setdata] = useState();
+	const [sum, setsum] = useState(0);
+	const [courier, setcourier] = useState(0);
+
+	const Navigate = useNavigate();
+
+	let onGetCart = async () => {
+		try {
+			let { data } = await REST_API({
+				url: "cart/get",
+				method: "GET",
+			});
+			let total = 0;
+			console.log(data.data);
+			data.data.forEach((value, index) => {
+				total += value.qty * value.product.price;
+			});
+			console.log(total);
+			setsum(total);
+			setcourier(10000);
+			console.log(data.data);
+			setdata(data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		onGetCart();
+	}, []);
 	return (
 		<div className=" max-w-screen flex justify-center flex-col">
 			<div className=" w-screen border-b">
 				<div className="mx-auto flex justify-start items-center w-[1120px] h-[60px] font-mandalaFont text-red-700 font-bold text-3xl ">
-					tokonglomerat
+					<button onClick={() => Navigate("/home")}>tokonglomerat</button>
 				</div>
 			</div>
 			<div className=" mx-auto flex px-5 w-[1120px]">
@@ -72,68 +105,72 @@ export default function Checkout() {
 							</button>
 						</div>
 					</div>
-					{/* ORDER START HERE */}
-					<div className=" mt-4 font-tokpedFont font-semibold text-[14px]">Order 1</div>
-					<div className=" font-tokpedFont h-fit pt-4 border-b-4">
-						<div className=" font-semibold text-[14px] h-[46px] flex justify-start items-center ">
-							Toko Jakarta
-						</div>
-						<div className=" h-[156px] flex flex-row pt-5 border-b">
-							<div className=" h-[135px] w-[364px] flex ">
-								<img
-									alt="Image_Product"
-									className=" h-[60px] w-[60px]"
-									src="https://assets.segari.id/products/10002900001_20122022112329.webp"
-								/>
-								<div className=" h-[93px] my-[7px] ">
-									<p className=" pl-[15px] font-tokpedFont text-[14px]">Pakcoy</p>
-									<p className=" pl-[15px] font-tokpedFont text-[12px]">450 - 550 gram / pack</p>
-									<p className=" pl-[15px] font-semibold font-tokpedFont text-[14px]">Rp. 4,000</p>
-								</div>
-							</div>
-						</div>
-						<div className=" h-14 my-[6px] flex justify-between items-center">
-							<p className=" font-semibold text-[14px]">Subtotal</p>
-							<p className=" font-semibold text-[14px]">Rp. 4,000 </p>
-						</div>
-					</div>
-					{/* ORDER END HERE */}
-					{/* ORDER START HERE */}
-					<div className=" mt-4 font-tokpedFont font-semibold text-[14px]">Order 2</div>
-					<div className=" font-tokpedFont h-fit pt-4 border-b-4">
-						<div className=" font-semibold text-[14px] h-[46px] flex justify-start items-center ">
-							Toko Jakarta
-						</div>
-						<div className=" h-[156px] flex flex-row pt-5 border-b">
-							<div className=" h-[135px] w-[364px] flex ">
-								<img
-									alt="Image_Product"
-									className=" h-[60px] w-[60px]"
-									src="https://assets.segari.id/products/70000600018_27122022104740.webp"
-								/>
-								<div className=" h-[93px] my-[7px] ">
-									<p className=" pl-[15px] font-tokpedFont text-[14px]">Tahu Cina Manalagi</p>
-									<p className=" pl-[15px] font-tokpedFont text-[12px]">450 - 550 gram / pack</p>
-									<p className=" pl-[15px] font-semibold font-tokpedFont text-[14px]">Rp. 13,400</p>
-								</div>
-							</div>
-						</div>
-						<div className=" h-14 my-[6px] flex justify-between items-center">
-							<p className=" font-semibold text-[14px]">Subtotal</p>
-							<p className=" font-semibold text-[14px]">Rp. 13,400 </p>
-						</div>
-					</div>
-					{/* ORDER END HERE */}
+					{data
+						? data.map((value, index) => {
+								return (
+									<>
+										{/* ORDER START HERE */}
+										<div className=" mt-4 font-tokpedFont font-semibold text-[14px]">
+											Order {index + 1}
+										</div>
+										<div className=" font-tokpedFont h-fit pt-4 border-b-4">
+											<div className=" font-semibold text-[14px] h-[46px] flex justify-start items-center ">
+												Toko {value.branch.location}
+											</div>
+											<div className=" h-[156px] flex flex-row pt-5 border-b">
+												<div className=" h-[135px] w-[364px] flex ">
+													<img
+														alt="Image_Product"
+														className=" h-[60px] w-[60px]"
+														src={value.product.img}
+													/>
+													<div className=" h-[93px] my-[7px] ">
+														<p className=" pl-[15px] font-tokpedFont text-[14px]">
+															{value.product.name}
+														</p>
+														<p className=" pl-[15px] flex gap-1 font-tokpedFont text-[12px]">
+															per <p className=" font-semibold">{value.product.unit.name}</p>
+														</p>
+														<p className=" pl-[15px] font-semibold font-tokpedFont text-[14px]">
+															Rp. {value.product.price.toLocaleString()}
+														</p>
+														<p className=" pl-[15px] flex gap-1 font-tokpedFont text-[14px]">
+															Quantity :{" "}
+															<p className=" font-tokpedFont font-semibold text-[14px]">
+																{value.qty}
+															</p>
+														</p>
+													</div>
+												</div>
+											</div>
+											<div className=" h-14 my-[6px] flex justify-between items-center">
+												<p className=" font-semibold text-[14px]">Subtotal</p>
+												<p className=" font-semibold text-[14px]">
+													Rp. {(value.product.price * value.qty).toLocaleString()}{" "}
+												</p>
+											</div>
+										</div>
+										{/* ORDER END HERE */}
+									</>
+								);
+						  })
+						: null}
 				</div>
-				<div className=" font-tokpedFont w-[350px] h-[266px] ml-[45px] mt-[182px] px-4 py-4 rounded-lg border shadow-xl">
+				<div className=" font-tokpedFont w-[350px] h-fit ml-[45px] mt-[182px] px-4 py-4 rounded-lg border shadow-xl">
 					<p className=" font-semibold text-[14px]">Shopping Summary</p>
-					<div className=" h-[21px] my-4 flex justify-between">
-						<p className=" text-[14px] ">Total price (2 Products)</p>
-						<p className=" text-[14px]">Rp. 17,400</p>
+					<div className=" h-fit my-4 flex justify-between">
+						<div>
+							<p className=" text-[14px] ">Total price ({data ? data.length : null} Products)</p>
+							<p className=" mt-2 text-[14px] ">Courier Cost </p>
+						</div>
+						<div>
+							<p className=" flex gap-1 text-[14px]">Rp. {sum.toLocaleString()} </p>
+							<p className=" mt-2 text-[14px]">Rp. {courier.toLocaleString()}</p>
+						</div>
 					</div>
 					<div className=" border-t flex justify-between h-[37px] items-end ">
 						<p className=" font-semibold text-[16px] ">Total Bill</p>
-						<p className=" font-semibold text-[16px] ">Rp. 37,400</p>
+						<p className=" font-semibold text-[16px] ">Rp. {(sum + courier).toLocaleString()}</p>
 					</div>
 					<p className=" mt-4 text-slate-500 text-[11px]">
 						Dengan mengaktifkan asuransi, Saya menyetujui{" "}

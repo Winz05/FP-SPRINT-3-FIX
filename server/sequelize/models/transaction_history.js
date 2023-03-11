@@ -9,17 +9,19 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate({ transaction }) {
 			// define association here
-			// this.belongsTo(transaction, { foreignKey: "transaction_id" });
 		}
 	}
 	transaction_history.init(
 		{
 			status: DataTypes.STRING,
+			invoice: DataTypes.STRING,
 		},
 		{
 			sequelize,
 			modelName: "transaction_history",
 			freezeTableName: true,
+			timestamps: true,
+			updatedAt: false,
 		}
 	);
 	return transaction_history;

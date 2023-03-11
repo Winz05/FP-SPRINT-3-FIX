@@ -3,11 +3,8 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import toast, { Toaster } from "react-hot-toast";
 import tokonglomerat from "../support/assets/edit_register_new.png";
 import LoadingSpin from "react-loading-spin";
-// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import REST_API from "../support/services/RESTApiService";
-
-// import { onSubmit } from "../support/service/register";
 
 function Register() {
 	const [showPassword, setshowPassword] = useState();
